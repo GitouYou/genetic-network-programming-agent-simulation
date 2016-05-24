@@ -1,5 +1,3 @@
 package genetic;
 
-public abstract class DecisionNode {
-	
-}
+public abstract class DecisionNode {}

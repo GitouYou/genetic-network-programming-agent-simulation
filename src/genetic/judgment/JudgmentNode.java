@@ -1,6 +1,7 @@
 package genetic.judgment;
 
-import genetic.AuctionInfo;
+import auction.Auction;
+import auction.BiddingAgent.Attitude;
 import genetic.DecisionNode;
 
 public abstract class JudgmentNode extends DecisionNode {
@@ -27,5 +28,5 @@ public abstract class JudgmentNode extends DecisionNode {
 		this.destination2 = destination2;
 	}
 	
-	protected abstract DecisionNode makeDecision(AuctionInfo state);
+	protected abstract DecisionNode makeDecision(Auction state, Attitude attitude);
 }
