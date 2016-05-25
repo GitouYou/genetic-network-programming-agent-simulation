@@ -102,7 +102,7 @@ class DecisionTreeGenerator {
 		ArrayList<ProcessingNode> incompleteNodes = new ArrayList<ProcessingNode>();
 
 		for (ProcessingNode node : processingNodes) {
-			if (node.getNextNode() == null) {
+			if (node.getNextNode(null, null) == null) {
 				incompleteNodes.add(node);
 			}
 		}

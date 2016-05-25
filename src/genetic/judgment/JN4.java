@@ -3,7 +3,7 @@ package genetic.judgment;
 import java.util.Random;
 
 import auction.Auction;
-import auction.BiddingAgent.Attitude;
+import bidders.BiddingAgent.Attitude;
 import genetic.Node;
 
 public class JN4 extends JudgmentNode {

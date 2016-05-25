@@ -10,6 +10,8 @@ import jade.lang.acl.ACLMessage;
 
 import java.util.ArrayList;
 
+import bidders.BiddingAgent;
+
 public class AuctionHouse extends Agent {
 	private ArrayList<BiddingAgent> bidders;
 	private ArrayList<Auction> auctions;

@@ -1,6 +1,8 @@
 package auction;
 import java.util.ArrayList;
 
+import bidders.BiddingAgent;
+
 public class Auction {
 	private final int totalTimeSteps; // Maximum number of time steps *for each good* in this auction. From 30 to 100
 	private int currentTimeStep; // The current time step *for the whole auction*

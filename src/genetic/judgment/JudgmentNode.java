@@ -1,7 +1,7 @@
 package genetic.judgment;
 
 import auction.Auction;
-import auction.BiddingAgent.Attitude;
+import bidders.BiddingAgent.Attitude;
 import genetic.Node;
 
 public abstract class JudgmentNode extends Node {
@@ -28,10 +28,18 @@ public abstract class JudgmentNode extends Node {
 		}
 	}
 	
-	protected abstract Node makeDecision(Auction state, Attitude attitude);
+	public int getBidIncrease() {
+		return -1;
+	}
+	
+	public final Node getNextNode(Auction auction, Attitude attitude) {
+		return makeDecision(auction, attitude);
+	}
 	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " (" + hashCode() + ")\n   -> " + destination1.getClass().getSimpleName() + " (" + destination1.hashCode() + "), " + destination2.getClass().getSimpleName() + " (" + destination2.hashCode() + ")";
 	}
+	
+	protected abstract Node makeDecision(Auction state, Attitude attitude);
 }

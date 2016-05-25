@@ -2,6 +2,9 @@ package genetic;
 
 import java.util.Random;
 
+import auction.Auction;
+import bidders.BiddingAgent.Attitude;
+
 public class ProcessingNode extends Node {
 	private final int bidIncrease;
 	private Node nextNode;
@@ -10,16 +13,11 @@ public class ProcessingNode extends Node {
 		bidIncrease = new Random(11).nextInt();
 	}
 	
-	public ProcessingNode(Node nextNode) {
-		this();
-		this.nextNode = nextNode;
-	}
-	
 	public int getBidIncrease() {
 		return bidIncrease;
 	}
 	
-	public Node getNextNode() {
+	public Node getNextNode(Auction auction, Attitude attitude) {
 		return nextNode;
 	}
 	
