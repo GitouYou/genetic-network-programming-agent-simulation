@@ -1,11 +1,17 @@
 package genetic;
 
-public class ProcessingNode extends DecisionNode {
-	private int bidIncrease;
-	private DecisionNode nextNode;
+import java.util.Random;
+
+public class ProcessingNode extends Node {
+	private final int bidIncrease;
+	private Node nextNode;
 	
-	public ProcessingNode(int bidIncrease, DecisionNode nextNode) {
-		this.bidIncrease = bidIncrease;
+	public ProcessingNode() {
+		bidIncrease = new Random(11).nextInt();
+	}
+	
+	public ProcessingNode(Node nextNode) {
+		this();
 		this.nextNode = nextNode;
 	}
 	
@@ -13,11 +19,16 @@ public class ProcessingNode extends DecisionNode {
 		return bidIncrease;
 	}
 	
-	public DecisionNode getNextNode() {
+	public Node getNextNode() {
 		return nextNode;
 	}
 	
-	public void setNextNode(DecisionNode nextNode) {
+	public void setNextNode(Node nextNode) {
 		this.nextNode = nextNode;
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " (" + hashCode() + ")\n   -> " + nextNode.getClass().getSimpleName() + " (" + nextNode.hashCode() + ")";
 	}
 }

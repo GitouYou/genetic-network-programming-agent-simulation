@@ -2,31 +2,36 @@ package genetic.judgment;
 
 import auction.Auction;
 import auction.BiddingAgent.Attitude;
-import genetic.DecisionNode;
+import genetic.Node;
 
-public abstract class JudgmentNode extends DecisionNode {
-	protected DecisionNode destination1, destination2;
+public abstract class JudgmentNode extends Node {
+	protected Node destination1, destination2;
 	
-	public JudgmentNode(DecisionNode destination1, DecisionNode destination2) {
-		this.destination1 = destination1;
-		this.destination2 = destination2;
-	}
+	public JudgmentNode() {}
 	
-	public DecisionNode getDestination1() {
+	public Node getDestination1() {
 		return destination1;
 	}
 	
-	public void setDestination1(DecisionNode destination1) {
-		this.destination1 = destination1;
-	}
-	
-	public DecisionNode getDestination2() {
+	public Node getDestination2() {
 		return destination2;
 	}
 	
-	public void setDestination2(DecisionNode destination2) {
-		this.destination2 = destination2;
+	public void addDestination(Node destination) {
+		if (destination1 == null) destination1 = destination;
+		else if (destination2 == null) destination2 = destination;
 	}
 	
-	protected abstract DecisionNode makeDecision(Auction state, Attitude attitude);
+	protected void checkDestinationNodes() {
+		if (destination1 == null || destination2 == null) {
+			throw new NullPointerException("Destination nodes haven't been initialized!");
+		}
+	}
+	
+	protected abstract Node makeDecision(Auction state, Attitude attitude);
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " (" + hashCode() + ")\n   -> " + destination1.getClass().getSimpleName() + " (" + destination1.hashCode() + "), " + destination2.getClass().getSimpleName() + " (" + destination2.hashCode() + ")";
+	}
 }
