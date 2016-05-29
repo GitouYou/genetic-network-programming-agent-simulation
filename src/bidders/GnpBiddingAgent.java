@@ -5,6 +5,8 @@ import auction.Good;
 import genetic.DecisionTree;
 
 public class GnpBiddingAgent extends BiddingAgent {
+	private static final long serialVersionUID = -3417985818116238286L;
+	
 	protected final DecisionTree decisionTree;
 	
 	public GnpBiddingAgent() {

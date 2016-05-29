@@ -4,12 +4,14 @@ import auction.Auction;
 import auction.Good;
 
 public class StandardBiddingAgent extends BiddingAgent {
+	private static final long serialVersionUID = -2662506026222927319L;
+
 	@Override
 	protected double desperateBid(Good good, Auction auction) {
 		double kde = .7;
 		double betade = 5;
 		
-		return b(auction, good, kde, betade);
+		return b(good, auction, kde, betade);
 	}
 
 	@Override
@@ -17,7 +19,7 @@ public class StandardBiddingAgent extends BiddingAgent {
 		double kdb = .3;
 		double betadb = .3;
 		
-		return b(auction, good, kdb, betadb);
+		return b(good, auction, kdb, betadb);
 	}
 
 	@Override
@@ -25,13 +27,13 @@ public class StandardBiddingAgent extends BiddingAgent {
 		double krt = .6;
 		double betart = 4;
 		
-		return b(auction, good, krt, betart);
+		return b(good, auction, krt, betart);
 	}
 	
 	private double b(Good good, Auction auction, double k, double beta) {
 		int T = auction.getTotalTimeSteps();
 		int t = auction.getCurrentTimeStep() % T;
-		int P = auction.getCurrentBidPrice(good);
+		double P = auction.getHighestBid(good);
 		double PP = goodsInterested.get(good).getPrivatePrice();
 		
 		return (double) t / T * P + alpha(k, beta, t, T) * (PP - (double) t / T * P);

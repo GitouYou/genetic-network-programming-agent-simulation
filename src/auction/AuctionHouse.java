@@ -1,5 +1,7 @@
 package auction;
 
+import java.util.ArrayList;
+
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -8,15 +10,14 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
-import java.util.ArrayList;
-
-import bidders.BiddingAgent;
-
 public class AuctionHouse extends Agent {
-	private ArrayList<BiddingAgent> bidders;
+	private static final long serialVersionUID = 4594153245533339995L;
+	
 	private ArrayList<Auction> auctions;
 	
 	class AuctionHouseBehavior extends CyclicBehaviour {
+		private static final long serialVersionUID = 5337730145098279751L;
+
 		public AuctionHouseBehavior(Agent a) {
 			super(a);
 		}
@@ -41,7 +42,6 @@ public class AuctionHouse extends Agent {
 		ServiceDescription sd = new ServiceDescription();
 		sd.setName(getName());
 		
-		bidders = new ArrayList<BiddingAgent>();
 		auctions = new ArrayList<Auction>();
 		
 		sd.setType("AuctionHouse");

@@ -8,6 +8,8 @@ import auction.Good;
 import jade.core.Agent;
 
 public abstract class BiddingAgent extends Agent {
+	private static final long serialVersionUID = -523845231023002319L;
+	
 	public enum Attitude { ATT1, ATT2, ATT3 };
 
 	protected Map<Good, GoodValuation> goodsInterested;
