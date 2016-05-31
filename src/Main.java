@@ -1,12 +1,16 @@
-import auction.AuctionHouse;
-import bidders.GnpBiddingAgent;
-import bidders.StandardBiddingAgent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
+import org.jfree.ui.RefineryUtilities;
+
+import auction.AuctionHouse;
+import bidders.GnpBiddingAgent;
+import bidders.StandardBiddingAgent;
+import charts.BarChart;
+import charts.PieChart;
 
 public class Main {
 
@@ -33,5 +37,15 @@ public class Main {
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
+		
+		/*
+        PieChart pie = new PieChart("Comparison", "Which operating system are you using?");
+        pie.pack();
+        pie.setVisible(true);
+        final BarChart bar = new BarChart("Bar Chart Demo");
+        bar.pack();
+        RefineryUtilities.centerFrameOnScreen(bar);
+        bar.setVisible(true);
+        */
 	}
 }
