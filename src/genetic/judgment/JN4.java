@@ -7,11 +7,11 @@ import bidders.BiddingAgent.Attitude;
 import genetic.Node;
 
 public class JN4 extends JudgmentNode {
-	private final Node[] decisions = new Node[Attitude.values().length];
+	private final boolean[] decisions = new boolean[Attitude.values().length];
 	
-	{
+	public JN4() {
 		for (Attitude att : Attitude.values()) {
-			decisions[att.ordinal()] = (new Random().nextBoolean()) ? destination1 : destination2;
+			decisions[att.ordinal()] = new Random().nextBoolean();
 		}
 	}
 
@@ -19,6 +19,6 @@ public class JN4 extends JudgmentNode {
 	public Node makeDecision(Auction auction, Attitude attitude) {
 		checkDestinationNodes();
 
-		return decisions[attitude.ordinal()];
+		return decisions[attitude.ordinal()] ? destination1 : destination2;
 	}
 }

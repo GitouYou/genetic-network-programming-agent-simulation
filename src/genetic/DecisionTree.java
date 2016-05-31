@@ -21,9 +21,13 @@ public class DecisionTree {
 	public int makeDecision(Auction auction, Attitude attitude) {
 		do {
 			currentNode = currentNode.getNextNode(auction, attitude);
-		} while (currentNode.getBidIncrease() != -1);
+		} while (currentNode.getBidIncrease() == -1);
 		
 		return currentNode.getBidIncrease();
+	}
+	
+	public void restartTree() {
+		currentNode = nodes.get(0);
 	}
 	
 	@Override

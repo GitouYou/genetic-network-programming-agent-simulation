@@ -10,7 +10,7 @@ public class ProcessingNode extends Node {
 	private Node nextNode;
 	
 	public ProcessingNode() {
-		bidIncrease = new Random(11).nextInt();
+		bidIncrease = new Random().nextInt(11);
 	}
 	
 	public int getBidIncrease() {

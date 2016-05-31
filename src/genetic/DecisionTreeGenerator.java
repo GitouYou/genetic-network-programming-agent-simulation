@@ -10,11 +10,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 class DecisionTreeGenerator {
+	private static int NUM_JUDGMENT_NODES = 9;
+	private static int NUM_PROCESSING_NODES = 10;
+	
 	private ArrayList<JudgmentNode> judgmentNodes = new ArrayList<JudgmentNode>();
 	private ArrayList<ProcessingNode> processingNodes = new ArrayList<ProcessingNode>();
 
 	public DecisionTreeGenerator() {
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < NUM_JUDGMENT_NODES; ++i) {
 			JudgmentNode judgmentNode;
 			int judgmentNodeType = new Random().nextInt(4);
 
@@ -39,7 +42,7 @@ class DecisionTreeGenerator {
 			judgmentNodes.add(judgmentNode);
 		}
 
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < NUM_PROCESSING_NODES; ++i) {
 			ProcessingNode processingNode = new ProcessingNode();
 			processingNodes.add(processingNode);
 		}
