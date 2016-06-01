@@ -112,7 +112,7 @@ public class BarChart extends ApplicationFrame {
 			categories.add("Good "+ AuctionHouse.auctionStats.get(i).get(0));
 		}
 
-		System.out.println("CATEGORIES\n"+categories);
+		//System.out.println("CATEGORIES\n"+categories);
 		// create the dataset...
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 

@@ -49,7 +49,7 @@ public abstract class BiddingAgent extends Agent {
 
 				msg.setContent("Bidder_Register");
 				send(msg);
-				//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+				System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 
 				BidBehavior b = new BidBehavior(BiddingAgent.this);
 				addBehaviour(b);
@@ -124,7 +124,7 @@ public abstract class BiddingAgent extends Agent {
 			reply.setContent(replyContent);
 			reply.setPerformative(ACLMessage.PROPOSE);
 			send(reply);
-			//System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
+			System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
 		}
 	}
 

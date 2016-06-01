@@ -30,6 +30,7 @@ public class AuctionHouse extends Agent {
 	public static ArrayList<Integer> goodStats = new ArrayList<Integer>();
 	public static int numberGoodsWonGNPAgents = 0;
 	public static int numberGoodsWonSTDAgents = 0;
+	private double yPos = 0;
 
 	private class StartBehavior extends CyclicBehaviour {
 		private static final long serialVersionUID = 5337730145098279751L;
@@ -50,7 +51,7 @@ public class AuctionHouse extends Agent {
 					bidders.add(msg.getSender());
 					reply.setContent(replyContent + "RegisterSuccess");
 					reply.setPerformative(ACLMessage.CONFIRM);
-					//System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
+					System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
 					send(reply);
 					System.out.println("Bidder " + msg.getSender().getLocalName() + " entered the auction house.");
 
@@ -110,7 +111,7 @@ public class AuctionHouse extends Agent {
 
 				String msgContent = "AuctionHouse_NextBid_" + highestBidValue;
 				msg.setContent(msgContent);
-				//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+				System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 				send(msg);
 
 				receivedBids = 0;
@@ -143,10 +144,10 @@ public class AuctionHouse extends Agent {
 				numberGoodsWonGNPAgents++;
 			}
 			goodStats.add((int)highestBidValue);
-			System.out.println(goodStats);
+			//System.out.println(goodStats);
 			auctionStats.add((ArrayList<Integer>) goodStats.clone());
 			goodStats.clear();
-			System.out.println(auctionStats);
+			//System.out.println(auctionStats);
 			
 					
 			receivedBids = 0;
@@ -175,14 +176,24 @@ public class AuctionHouse extends Agent {
 				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				final BarChart bar = new BarChart("Auction "+currentAuction);
 		        bar.pack();
-		        RefineryUtilities.positionFrameOnScreen(bar,0.25,0.25);
+		        
+		        double xPos = .4 * (currentAuction-1) % 1.2;
+		        RefineryUtilities.positionFrameOnScreen(bar,xPos,yPos);
+		        if(xPos==0.8){
+			        if(yPos==0.8){
+			        	yPos=0; 
+			        } else {
+			        	yPos+=0.4;
+			        }
+			    }
 		        //RefineryUtilities.centerFrameOnScreen(bar);
 		        bar.setVisible(true);
 				startBidding();
 			} else {
 				final BarChart bar = new BarChart("Auction "+currentAuction);
 		        bar.pack();
-		        RefineryUtilities.centerFrameOnScreen(bar);
+		        RefineryUtilities.positionFrameOnScreen(bar,0.4,.1);
+		        //RefineryUtilities.centerFrameOnScreen(bar);
 		        bar.setVisible(true);
 		        
 		        PieChart pie = new PieChart("Comparison", "Which agent won more times?");
@@ -235,6 +246,6 @@ public class AuctionHouse extends Agent {
 		msgContent += auction.getCurrentGood().getCommonPrice();
 		msg.setContent(msgContent);
 		send(msg);
-		//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+		System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 	}
 }
