@@ -2,6 +2,9 @@ package auction;
 
 import java.util.ArrayList;
 
+import org.jfree.ui.RefineryUtilities;
+
+import charts.BarChart;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -13,15 +16,17 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctionHouse extends Agent {
 	private static final long serialVersionUID = 4594153245533339995L;
-	private static final int NUM_AGENTS = 20;
-	private static final int NUM_AUCTIONS = 10;
+	private static final int NUM_AGENTS = 40;
+	private static final int NUM_AUCTIONS = 1;
 
 	private ArrayList<Auction> auctions;
 	private int currentAuction;
-	private ArrayList<AID> bidders;
+	private ArrayList<AID> bidders;   
 	private double highestBidValue = 0;
 	private AID highestBidAid = null;
 	private int receivedBids;
+	public static ArrayList<ArrayList<Integer>> auctionStats = new ArrayList<ArrayList<Integer>>();
+	public static ArrayList<Integer> goodStats = new ArrayList<Integer>();
 
 	private class StartBehavior extends CyclicBehaviour {
 		private static final long serialVersionUID = 5337730145098279751L;
@@ -117,7 +122,22 @@ public class AuctionHouse extends Agent {
 			AID winner = highestBidAid;
 
 			System.out.println("Auction " + currentAuction + " good " + auctions.get(currentAuction).getCurrentGoodNumber() + " won by " + winner.getLocalName() + " for " + highestBidValue);
-
+			
+			//Good stats to create charts - [goodNumber, sdt(0)/gnp(1), winnerBid]
+			goodStats.add(auctions.get(currentAuction).getCurrentGoodNumber());
+			String[] nameParts = (winner.getLocalName().split("-"));
+			if(nameParts[1].equals("std")){
+				goodStats.add(0);
+			}else {
+				goodStats.add(1);
+			}
+			goodStats.add((int)highestBidValue);
+			System.out.println(goodStats);
+			auctionStats.add((ArrayList<Integer>) goodStats.clone());
+			goodStats.clear();
+			System.out.println(auctionStats);
+			
+					
 			receivedBids = 0;
 			highestBidValue = 0;
 			highestBidAid = null;
@@ -134,12 +154,22 @@ public class AuctionHouse extends Agent {
 		}
 
 		private void endAuction() {
+			//auctionStats.add(goodStats);
+			
+			//System.out.println(auctionStats);
+			
 			++currentAuction;
-
+			
 			if (currentAuction < NUM_AUCTIONS) {
 				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				startBidding();
+			} else {
+				final BarChart bar = new BarChart("Auction "+currentAuction);
+		        bar.pack();
+		        RefineryUtilities.centerFrameOnScreen(bar);
+		        bar.setVisible(true);
 			}
+			
 			//removeBehaviour(this);
 		}
 	}
