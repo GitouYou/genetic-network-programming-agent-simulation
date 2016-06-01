@@ -12,6 +12,8 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
 
+import auction.AuctionHouse;
+
 
 
 public class PieChart extends JFrame {
@@ -34,15 +36,14 @@ public class PieChart extends JFrame {
     }
     
     
-/**
+  	/**
      * Creates a sample dataset 
      */
 
     private  PieDataset createDataset() {
         DefaultPieDataset result = new DefaultPieDataset();
-        result.setValue("Linux", 29);
-        result.setValue("Mac", 20);
-        result.setValue("Windows", 51);
+        result.setValue("STD", AuctionHouse.numberGoodsWonSTDAgents);
+        result.setValue("GNP", AuctionHouse.numberGoodsWonGNPAgents);
         return result;
         
     }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.jfree.ui.RefineryUtilities;
 
 import charts.BarChart;
+import charts.PieChart;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -17,7 +18,7 @@ import jade.lang.acl.ACLMessage;
 public class AuctionHouse extends Agent {
 	private static final long serialVersionUID = 4594153245533339995L;
 	private static final int NUM_AGENTS = 40;
-	private static final int NUM_AUCTIONS = 1;
+	private static final int NUM_AUCTIONS = 10;
 
 	private ArrayList<Auction> auctions;
 	private int currentAuction;
@@ -27,6 +28,8 @@ public class AuctionHouse extends Agent {
 	private int receivedBids;
 	public static ArrayList<ArrayList<Integer>> auctionStats = new ArrayList<ArrayList<Integer>>();
 	public static ArrayList<Integer> goodStats = new ArrayList<Integer>();
+	public static int numberGoodsWonGNPAgents = 0;
+	public static int numberGoodsWonSTDAgents = 0;
 
 	private class StartBehavior extends CyclicBehaviour {
 		private static final long serialVersionUID = 5337730145098279751L;
@@ -128,8 +131,11 @@ public class AuctionHouse extends Agent {
 			String[] nameParts = (winner.getLocalName().split("-"));
 			if(nameParts[1].equals("std")){
 				goodStats.add(0);
+				numberGoodsWonSTDAgents++;
+				
 			}else {
 				goodStats.add(1);
+				numberGoodsWonGNPAgents++;
 			}
 			goodStats.add((int)highestBidValue);
 			System.out.println(goodStats);
@@ -162,12 +168,21 @@ public class AuctionHouse extends Agent {
 			
 			if (currentAuction < NUM_AUCTIONS) {
 				//addBehaviour(new StartBehavior(AuctionHouse.this));
+				final BarChart bar = new BarChart("Auction "+currentAuction);
+		        bar.pack();
+		        RefineryUtilities.positionFrameOnScreen(bar,0.25,0.25);
+		        //RefineryUtilities.centerFrameOnScreen(bar);
+		        bar.setVisible(true);
 				startBidding();
 			} else {
 				final BarChart bar = new BarChart("Auction "+currentAuction);
 		        bar.pack();
 		        RefineryUtilities.centerFrameOnScreen(bar);
 		        bar.setVisible(true);
+		        
+		        PieChart pie = new PieChart("Comparison", "Which agent won more times?");
+		        pie.pack();
+		        pie.setVisible(true);
 			}
 			
 			//removeBehaviour(this);

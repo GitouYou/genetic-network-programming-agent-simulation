@@ -121,6 +121,7 @@ public class BarChart extends ApplicationFrame {
 			dataset.addValue(AuctionHouse.auctionStats.get(i).get(2), (AuctionHouse.auctionStats.get(i).get(1) == 0 ? series1 : series2), categories.get(i));
 
 		}
+		 AuctionHouse.auctionStats.clear();
 
 		return dataset;
 
