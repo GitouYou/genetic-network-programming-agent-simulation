@@ -23,7 +23,7 @@ public class StandardBiddingAgent extends BiddingAgent {
 	}
 
 	@Override
-	protected double desperateBargainBid(Good good, Auction auction) {
+	protected double remainingTimeBid(Good good, Auction auction) {
 		double krt = .6;
 		double betart = 4;
 

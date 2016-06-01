@@ -126,6 +126,11 @@ public class AuctionHouse extends Agent {
 
 			System.out.println("Auction " + currentAuction + " good " + auctions.get(currentAuction).getCurrentGoodNumber() + " won by " + winner.getLocalName() + " for " + highestBidValue);
 			
+			ACLMessage youWin = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
+			youWin.addReceiver(winner);
+			youWin.setContent("AuctionHouse_YouWin!");
+			send(youWin);
+			
 			//Good stats to create charts - [goodNumber, sdt(0)/gnp(1), winnerBid]
 			goodStats.add(auctions.get(currentAuction).getCurrentGoodNumber());
 			String[] nameParts = (winner.getLocalName().split("-"));

@@ -16,17 +16,17 @@ public class GnpBiddingAgent extends BiddingAgent {
 	
 	@Override
 	protected double desperateBid(Good good, Auction auction) {
-		return decisionTree.makeDecision(auction, Attitude.ATT1);
+		return decisionTree.makeDecision(auction, Attitude.DESPERATE);
 	}
 	
 	@Override
 	protected double bargainBid(Good good, Auction auction) {
-		return decisionTree.makeDecision(auction, Attitude.ATT2);
+		return decisionTree.makeDecision(auction, Attitude.BARGAIN);
 	}
 	
 	@Override
-	protected double desperateBargainBid(Good good, Auction auction) {
-		return decisionTree.makeDecision(auction, Attitude.ATT3);
+	protected double remainingTimeBid(Good good, Auction auction) {
+		return decisionTree.makeDecision(auction, Attitude.REMAINING_TIME);
 	}
 	
 	@Override

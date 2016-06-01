@@ -64,3 +64,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /bin/
+
+APDescription.txt
+MTPs-Main-Container.txt

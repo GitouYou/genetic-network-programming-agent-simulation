@@ -16,13 +16,15 @@ import jade.lang.acl.ACLMessage;
 public abstract class BiddingAgent extends Agent {
 	private static final long serialVersionUID = -523845231023002319L;
 
-	public enum Attitude { ATT1, ATT2, ATT3 };
+	public enum Attitude { DESPERATE, BARGAIN, REMAINING_TIME };
 
 	private AID auctionHouseAid;
 	//protected Map<Good, GoodValuation> goodsInterested;
 	protected Auction currentAuction;
 	protected Good currentGood;
 	protected GoodValuation currentGoodValuation;
+	
+	private int desperateGoodsWon, bargainGoodsWon, remainingTimeGoodsWon;
 
 	private class AuctionHouseRegisterBehavior extends OneShotBehaviour {
 		private static final long serialVersionUID = 3360748631414660645L;
@@ -100,6 +102,19 @@ public abstract class BiddingAgent extends Agent {
 				currentAuction.advanceTimeStep();
 				currentAuction.setHighestBid(Double.parseDouble(msgParts[2]));
 			}
+			else if(msgParts[1].equals("YouWin!")) {
+				switch (currentGoodValuation.getAttitude()) {
+				case DESPERATE:
+					++desperateGoodsWon;
+					break;
+				case BARGAIN:
+					++bargainGoodsWon;
+					break;
+				case REMAINING_TIME:
+					++remainingTimeGoodsWon;
+					break;
+				}
+			}
 		}
 
 		private void bid(ACLMessage reply) {
@@ -134,14 +149,14 @@ public abstract class BiddingAgent extends Agent {
 		double priceIncrease;
 
 		switch (attitudeTowardsGood) {
-		case ATT1:
+		case DESPERATE:
 			priceIncrease = desperateBid(good, auction);
 			break;
-		case ATT2:
+		case BARGAIN:
 			priceIncrease = bargainBid(good, auction);
 			break;
-		case ATT3:
-			priceIncrease = desperateBargainBid(good, auction);
+		case REMAINING_TIME:
+			priceIncrease = remainingTimeBid(good, auction);
 			break;
 		default:
 			priceIncrease = 0;
@@ -156,13 +171,16 @@ public abstract class BiddingAgent extends Agent {
 
 	protected abstract double desperateBid(Good good, Auction auction);
 	protected abstract double bargainBid(Good good, Auction auction);
-	protected abstract double desperateBargainBid(Good good, Auction auction);
+	protected abstract double remainingTimeBid(Good good, Auction auction);
 	protected abstract void restartBidding();
 
 	@Override
 	protected abstract void setup();
 
 	protected void setup(String bidderType) {
+		desperateGoodsWon = 0;
+		bargainGoodsWon = 0;
+		remainingTimeGoodsWon = 0;
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -180,5 +198,17 @@ public abstract class BiddingAgent extends Agent {
 		// Create behavior
 		AuctionHouseRegisterBehavior b = new AuctionHouseRegisterBehavior(this);
 		addBehaviour(b);
+	}
+	
+	public int getDesperateGoodsWon() {
+		return desperateGoodsWon;
+	}
+	
+	public int getBargainGoodsWon() {
+		return bargainGoodsWon;
+	}
+	
+	public int getRemainingTimeGoodsWon() {
+		return remainingTimeGoodsWon;
 	}
 }
