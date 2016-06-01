@@ -33,7 +33,7 @@ public class StandardBiddingAgent extends BiddingAgent {
 	private double b(Good good, Auction auction, double k, double beta) {
 		int T = auction.getTotalTimeSteps();
 		int t = auction.getCurrentTimeStep() % T;
-		double P = auction.getHighestBid(good);
+		double P = auction.getHighestBid();
 		//double PP = goodsInterested.get(good).getPrivatePrice();
 		double PP = currentGoodValuation.getPrivatePrice();
 

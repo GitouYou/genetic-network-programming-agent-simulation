@@ -13,7 +13,7 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctionHouse extends Agent {
 	private static final long serialVersionUID = 4594153245533339995L;
-	private static final int NUM_AGENTS = 2;
+	private static final int NUM_AGENTS = 20;
 	private static final int NUM_AUCTIONS = 10;
 
 	private ArrayList<Auction> auctions;
@@ -42,7 +42,7 @@ public class AuctionHouse extends Agent {
 					bidders.add(msg.getSender());
 					reply.setContent(replyContent + "RegisterSuccess");
 					reply.setPerformative(ACLMessage.CONFIRM);
-					System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
+					//System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
 					send(reply);
 					System.out.println("Bidder " + msg.getSender().getLocalName() + " entered the auction house.");
 
@@ -102,32 +102,34 @@ public class AuctionHouse extends Agent {
 
 				String msgContent = "AuctionHouse_NextBid_" + highestBidValue;
 				msg.setContent(msgContent);
-				System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+				//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 				send(msg);
 
 				receivedBids = 0;
 
-				addBehaviour(new StartBehavior(AuctionHouse.this));
+				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				startBidding();
-				removeBehaviour(this);
+				//removeBehaviour(this);
 			}
 		}
 
 		private void endGood() {
 			AID winner = highestBidAid;
 
-			System.out.println("Good won by " + winner.getLocalName());
+			System.out.println("Auction " + currentAuction + " good " + auctions.get(currentAuction).getCurrentGoodNumber() + " won by " + winner.getLocalName() + " for " + highestBidValue);
 
 			receivedBids = 0;
+			highestBidValue = 0;
+			highestBidAid = null;
 
 			Auction auction = auctions.get(currentAuction);
 			if (auction.getCurrentGoodNumber() >= 10) {
 				endAuction();
 			}
 			else {			
-				addBehaviour(new StartBehavior(AuctionHouse.this));
+				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				startBidding();
-				removeBehaviour(this);
+				//removeBehaviour(this);
 			}
 		}
 
@@ -135,10 +137,10 @@ public class AuctionHouse extends Agent {
 			++currentAuction;
 
 			if (currentAuction < NUM_AUCTIONS) {
-				addBehaviour(new StartBehavior(AuctionHouse.this));
+				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				startBidding();
 			}
-			removeBehaviour(this);
+			//removeBehaviour(this);
 		}
 	}
 
@@ -183,6 +185,6 @@ public class AuctionHouse extends Agent {
 		msgContent += auction.getCurrentGood().getCommonPrice();
 		msg.setContent(msgContent);
 		send(msg);
-		System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+		//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 	}
 }

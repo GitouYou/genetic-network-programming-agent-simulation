@@ -1,39 +1,32 @@
 package auction;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Random;
-
-import bidders.BiddingAgent;
-import jade.core.AID;
 
 public class Auction {
 	private final int totalTimeSteps; // Maximum number of time steps *for each good* in this auction. From 30 to 100
 	private int currentTimeStep; // The current time step *for the whole auction*
 	private int currentGoodNumber; // The current good
-	private Map<Good, HighestBid> goods; // The goods and their current highest bid
+	private ArrayList<Good> goods; // The goods and their current highest bid
 	private double highestBid;
-	private ArrayList<BiddingAgent> bidders; // All the bidders who compete in this auction
+	//private ArrayList<BiddingAgent> bidders; // All the bidders who compete in this auction
 
 	public Auction() {
-		totalTimeSteps = new Random().nextInt(71) + 30;
-		currentTimeStep = 0;
-		currentGoodNumber = 0;
-		goods = new LinkedHashMap<Good, HighestBid>();
-		for (int i = 0; i < 10; ++i) goods.put(new Good(), new HighestBid(-1, null));
-		highestBid = 0;
-		bidders = new ArrayList<BiddingAgent>();
+		this(new Random().nextInt(71) + 30, 0, 0, 0);
 	}
 
-	public Auction(int totalTimeSteps, int currentTimeStep, int currentGoodNumber) {
+	public Auction(int totalTimeSteps, int currentTimeStep, int currentGoodNumber, double highestBid) {
 		this.totalTimeSteps = totalTimeSteps;
 		this.currentTimeStep = currentGoodNumber;
 		this.currentGoodNumber = currentGoodNumber;
+		goods = new ArrayList<Good>();
+		for (int i = 0; i < 10; ++i) goods.add(new Good());
+		this.highestBid = highestBid;
+		//bidders = new ArrayList<BiddingAgent>();
 	}
 
-	public void addBidder(BiddingAgent agent) {
+	/*public void addBidder(BiddingAgent agent) {
 		bidders.add(agent);
-	}
+	}*/
 
 	public int getTotalTimeSteps() {
 		return totalTimeSteps;
@@ -48,6 +41,7 @@ public class Auction {
 		if (currentTimeStep >= totalTimeSteps) {
 			currentTimeStep = 0;
 			currentGoodNumber += 1;
+			highestBid = 0;
 		}
 	}
 
@@ -55,14 +49,14 @@ public class Auction {
 		return currentGoodNumber;
 	}
 
-	public double getHighestBid(Good good) {
+	public double getHighestBid(/*Good good*/) {
 		//return goods.get(good).getHighestBid();
 		return highestBid;
 	}
 
-	public void addGood(Good good) {
+	/*public void addGood(Good good) {
 		goods.put(good, new HighestBid(0., new AID()));
-	}
+	}*/
 
 	public void setHighestBid(/*Good good, double highestBid, AID aid*/ double highestBid) {
 		//goods.put(good, new HighestBid(highestBid, aid));
@@ -70,10 +64,10 @@ public class Auction {
 	}
 
 	public Good getCurrentGood() {
-		return (Good) goods.keySet().toArray()[currentGoodNumber];
+		return goods.get(currentGoodNumber);
 	}
 
-	public ArrayList<BiddingAgent> getBidders() {
+	/*public ArrayList<BiddingAgent> getBidders() {
 		return bidders;
-	}
+	}*/
 }

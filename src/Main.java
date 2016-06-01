@@ -4,40 +4,47 @@ import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
-import org.jfree.ui.RefineryUtilities;
+
+import java.util.ArrayList;
 
 import auction.AuctionHouse;
 import bidders.GnpBiddingAgent;
 import bidders.StandardBiddingAgent;
-import charts.BarChart;
-import charts.PieChart;
 
 public class Main {
 
 	public static void main(String[] args) {
 		Runtime rt = Runtime.instance();
-		
+
 		Profile p = new ProfileImpl();
 		ContainerController cc = rt.createMainContainer(p);
-		
+
 		try {
 			/*AgentController rma = cc.createNewAgent("RMA", "jade.tools.rma.rma", null);
 			rma.start();*/
-			
+
 			AgentController auctionHouse = cc.acceptNewAgent("AuctionHouse", new AuctionHouse());
 			auctionHouse.start();
-			
-			AgentController gnp1 = cc.acceptNewAgent("bidder-gnp-1", new GnpBiddingAgent());
-			
-			AgentController std1 = cc.acceptNewAgent("bidder-std-1", new StandardBiddingAgent());
-			
-			gnp1.start();
-			
-			std1.start();
+
+			ArrayList<AgentController> agents = new ArrayList<AgentController>();
+			for (int i = 1; i <= 10; ++i) {
+				agents.add(cc.acceptNewAgent("bidder-gnp-" + i, new GnpBiddingAgent()));
+				agents.add(cc.acceptNewAgent("bidder-std-" + i, new StandardBiddingAgent()));
+			}
+
+			/*try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}*/
+
+			for (AgentController agent : agents) {
+				agent.start();
+			}
 		} catch (StaleProxyException e) {
 			e.printStackTrace();
 		}
-		
+
 		/*
         PieChart pie = new PieChart("Comparison", "Which operating system are you using?");
         pie.pack();
@@ -46,6 +53,6 @@ public class Main {
         bar.pack();
         RefineryUtilities.centerFrameOnScreen(bar);
         bar.setVisible(true);
-        */
+		 */
 	}
 }

@@ -47,7 +47,7 @@ public abstract class BiddingAgent extends Agent {
 
 				msg.setContent("Bidder_Register");
 				send(msg);
-				System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
+				//System.out.println("[" + getLocalName() + "] MSG: " + msg.getContent());
 
 				BidBehavior b = new BidBehavior(BiddingAgent.this);
 				addBehaviour(b);
@@ -77,15 +77,22 @@ public abstract class BiddingAgent extends Agent {
 			if (msgParts[1].equals("StartBidding")) {
 				// StartBidding_totalTimeSteps_currentTimeStep_currentGoodNumber_commonPrice
 				int oldGoodNumber;
+				double highestBid;
 				try {
 					oldGoodNumber = currentAuction.getCurrentGoodNumber();
+					highestBid = currentAuction.getHighestBid();
 				} catch (NullPointerException e) {
 					oldGoodNumber = -1;
+					highestBid = 0;
 				}
-				currentAuction = new Auction(Integer.parseInt(msgParts[2]), Integer.parseInt(msgParts[3]), Integer.parseInt(msgParts[4]));
+				int newGoodNumber = Integer.parseInt(msgParts[4]);
 				double commonPrice = Double.parseDouble(msgParts[5]);
-				int newGoodNumber = currentAuction.getCurrentGoodNumber();
-				if (oldGoodNumber != newGoodNumber) addGood(new Good(commonPrice));
+				if (oldGoodNumber != newGoodNumber) {
+					highestBid = 0;
+					changeCurrentGood(new Good(commonPrice));
+				}
+				currentAuction = new Auction(Integer.parseInt(msgParts[2]), Integer.parseInt(msgParts[3]), newGoodNumber, highestBid);
+				
 				restartBidding();
 				bid(reply);
 			}
@@ -102,7 +109,7 @@ public abstract class BiddingAgent extends Agent {
 			reply.setContent(replyContent);
 			reply.setPerformative(ACLMessage.PROPOSE);
 			send(reply);
-			System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
+			//System.out.println("[" + getLocalName() + "] MSG: " + reply.getContent());
 		}
 	}
 
@@ -110,7 +117,7 @@ public abstract class BiddingAgent extends Agent {
 		//goodsInterested = new HashMap<Good, GoodValuation>();
 	}
 
-	public final void addGood(Good good) {
+	public final void changeCurrentGood(Good good) {
 		Attitude attitude = Attitude.values()[new Random().nextInt(Attitude.values().length)];
 		int privatePricePercentage = new Random().nextInt(31) + 85;
 		double privatePrice = good.getCommonPrice() * (privatePricePercentage / 100.);
@@ -123,7 +130,7 @@ public abstract class BiddingAgent extends Agent {
 	protected final double makeBid(Good good, Auction auction) {
 		//Attitude attitudeTowardsGood = goodsInterested.get(good).getAttitude();
 		Attitude attitudeTowardsGood = currentGoodValuation.getAttitude();
-		double currentPrice = auction.getHighestBid(good);
+		double currentPrice = auction.getHighestBid();
 		double priceIncrease;
 
 		switch (attitudeTowardsGood) {
@@ -144,7 +151,7 @@ public abstract class BiddingAgent extends Agent {
 		double newPrice = currentPrice + priceIncrease;
 
 		if (newPrice > currentGoodValuation.getPrivatePrice()) return currentGoodValuation.getPrivatePrice();
-		else return currentPrice + priceIncrease;
+		else return newPrice;
 	}
 
 	protected abstract double desperateBid(Good good, Auction auction);
