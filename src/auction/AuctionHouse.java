@@ -1,6 +1,7 @@
 package auction;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import org.jfree.ui.RefineryUtilities;
 
@@ -170,6 +171,8 @@ public class AuctionHouse extends Agent {
 			
 			//System.out.println(auctionStats);
 			
+			geneticAlgorithm();
+			
 			++currentAuction;
 			
 			if (currentAuction < NUM_AUCTIONS) {
@@ -202,6 +205,25 @@ public class AuctionHouse extends Agent {
 			}
 			
 			//removeBehaviour(this);
+		}
+		
+		private void geneticAlgorithm() {
+			ACLMessage requestFitnessValue = new ACLMessage(ACLMessage.REQUEST);
+			for (AID bidder : bidders) {
+				requestFitnessValue.addReceiver(bidder);
+			}
+			requestFitnessValue.setContent("AuctionHouse_FitnessValue");
+			send(requestFitnessValue);
+			
+			LinkedHashMap<AID, Double> fitnessValues = new LinkedHashMap<AID, Double>();
+			
+			do {
+				ACLMessage fitnessValue = blockingReceive();
+				String[] msgParts = fitnessValue.getContent().split("_");
+				fitnessValues.put(fitnessValue.getSender(), Double.parseDouble(msgParts[2]));
+			} while (fitnessValues.size() < NUM_AGENTS);
+			
+			// TODO: continue
 		}
 	}
 

@@ -102,7 +102,7 @@ public abstract class BiddingAgent extends Agent {
 				currentAuction.advanceTimeStep();
 				currentAuction.setHighestBid(Double.parseDouble(msgParts[2]));
 			}
-			else if(msgParts[1].equals("YouWin!")) {
+			else if (msgParts[1].equals("YouWin!")) {
 				switch (currentGoodValuation.getAttitude()) {
 				case DESPERATE:
 					++desperateGoodsWon;
@@ -114,6 +114,11 @@ public abstract class BiddingAgent extends Agent {
 					++remainingTimeGoodsWon;
 					break;
 				}
+			}
+			else if (msgParts[1].equals("FitnessValue")) {
+				reply.setPerformative(ACLMessage.INFORM);
+				reply.setContent("Bidder_FitnessValue_" + getFitnessValue());
+				send(reply);
 			}
 		}
 
@@ -200,15 +205,7 @@ public abstract class BiddingAgent extends Agent {
 		addBehaviour(b);
 	}
 	
-	public int getDesperateGoodsWon() {
-		return desperateGoodsWon;
-	}
-	
-	public int getBargainGoodsWon() {
-		return bargainGoodsWon;
-	}
-	
-	public int getRemainingTimeGoodsWon() {
-		return remainingTimeGoodsWon;
+	private double getFitnessValue() {
+		return desperateGoodsWon + bargainGoodsWon + remainingTimeGoodsWon; // TODO: change
 	}
 }
