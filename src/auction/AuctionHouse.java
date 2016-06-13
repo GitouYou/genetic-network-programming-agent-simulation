@@ -1,7 +1,9 @@
 package auction;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 import org.jfree.ui.RefineryUtilities;
 
@@ -127,19 +129,19 @@ public class AuctionHouse extends Agent {
 			AID winner = highestBidAid;
 
 			System.out.println("Auction " + currentAuction + " good " + auctions.get(currentAuction).getCurrentGoodNumber() + " won by " + winner.getLocalName() + " for " + highestBidValue);
-			
+
 			ACLMessage youWin = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 			youWin.addReceiver(winner);
-			youWin.setContent("AuctionHouse_YouWin!");
+			youWin.setContent("AuctionHouse_YouWin!_" + highestBidValue);
 			send(youWin);
-			
+
 			//Good stats to create charts - [goodNumber, sdt(0)/gnp(1), winnerBid]
 			goodStats.add(auctions.get(currentAuction).getCurrentGoodNumber());
 			String[] nameParts = (winner.getLocalName().split("-"));
 			if(nameParts[1].equals("std")){
 				goodStats.add(0);
 				numberGoodsWonSTDAgents++;
-				
+
 			}else {
 				goodStats.add(1);
 				numberGoodsWonGNPAgents++;
@@ -149,8 +151,8 @@ public class AuctionHouse extends Agent {
 			auctionStats.add((ArrayList<Integer>) goodStats.clone());
 			goodStats.clear();
 			//System.out.println(auctionStats);
-			
-					
+
+
 			receivedBids = 0;
 			highestBidValue = 0;
 			highestBidAid = null;
@@ -168,45 +170,45 @@ public class AuctionHouse extends Agent {
 
 		private void endAuction() {
 			//auctionStats.add(goodStats);
-			
+
 			//System.out.println(auctionStats);
-			
+
 			geneticAlgorithm();
-			
+
 			++currentAuction;
-			
+
 			if (currentAuction < NUM_AUCTIONS) {
 				//addBehaviour(new StartBehavior(AuctionHouse.this));
 				final BarChart bar = new BarChart("Auction "+currentAuction);
-		        bar.pack();
-		        
-		        double xPos = .4 * (currentAuction-1) % 1.2;
-		        RefineryUtilities.positionFrameOnScreen(bar,xPos,yPos);
-		        if(xPos==0.8){
-			        if(yPos==0.8){
-			        	yPos=0; 
-			        } else {
-			        	yPos+=0.4;
-			        }
-			    }
-		        //RefineryUtilities.centerFrameOnScreen(bar);
-		        bar.setVisible(true);
+				bar.pack();
+
+				double xPos = .4 * (currentAuction-1) % 1.2;
+				RefineryUtilities.positionFrameOnScreen(bar,xPos,yPos);
+				if(xPos==0.8){
+					if(yPos==0.8){
+						yPos=0; 
+					} else {
+						yPos+=0.4;
+					}
+				}
+				//RefineryUtilities.centerFrameOnScreen(bar);
+				bar.setVisible(true);
 				startBidding();
 			} else {
 				final BarChart bar = new BarChart("Auction "+currentAuction);
-		        bar.pack();
-		        RefineryUtilities.positionFrameOnScreen(bar,0.4,.1);
-		        //RefineryUtilities.centerFrameOnScreen(bar);
-		        bar.setVisible(true);
-		        
-		        PieChart pie = new PieChart("Comparison", "Which agent won more times?");
-		        pie.pack();
-		        pie.setVisible(true);
+				bar.pack();
+				RefineryUtilities.positionFrameOnScreen(bar,0.4,.1);
+				//RefineryUtilities.centerFrameOnScreen(bar);
+				bar.setVisible(true);
+
+				PieChart pie = new PieChart("Comparison", "Which agent won more times?");
+				pie.pack();
+				pie.setVisible(true);
 			}
-			
+
 			//removeBehaviour(this);
 		}
-		
+
 		private void geneticAlgorithm() {
 			ACLMessage requestFitnessValue = new ACLMessage(ACLMessage.REQUEST);
 			for (AID bidder : bidders) {
@@ -214,16 +216,42 @@ public class AuctionHouse extends Agent {
 			}
 			requestFitnessValue.setContent("AuctionHouse_FitnessValue");
 			send(requestFitnessValue);
-			
-			LinkedHashMap<AID, Double> fitnessValues = new LinkedHashMap<AID, Double>();
-			
+
+			TreeMap<Double, ArrayList<AID>> fitnessValues = new TreeMap<Double, ArrayList<AID>>();
+			int numAgents = 0;
+
 			do {
 				ACLMessage fitnessValue = blockingReceive();
 				String[] msgParts = fitnessValue.getContent().split("_");
-				fitnessValues.put(fitnessValue.getSender(), Double.parseDouble(msgParts[2]));
-			} while (fitnessValues.size() < NUM_AGENTS);
+				double fitnessNumber = Double.parseDouble(msgParts[2]);
+				if (fitnessValues.containsKey(fitnessNumber)) {
+					fitnessValues.get(fitnessNumber).add(fitnessValue.getSender());
+				}
+				else {
+					ArrayList<AID> newAID = new ArrayList<AID>();
+					newAID.add(fitnessValue.getSender());
+					fitnessValues.put(fitnessNumber, newAID);
+				}
+				++numAgents;
+			} while (numAgents < NUM_AGENTS);
+
+			Iterator<ArrayList<AID>> it = fitnessValues.values().iterator();
+			ArrayList<AID> mutators = new ArrayList<AID>();
+			int numMutators = 0;
+			while (it.hasNext()) {
+				ArrayList<AID> aids = it.next();
+				for (AID aid : aids) {
+					mutators.add(aid);
+					if (++numMutators == 10) break;
+				}
+			}
 			
-			// TODO: continue
+			ACLMessage mutateMessage = new ACLMessage(ACLMessage.INFORM);
+			for (AID aid : mutators) {
+				mutateMessage.addReceiver(aid);
+			}
+			mutateMessage.setContent("AuctionHouse_Mutate");
+			send(mutateMessage);
 		}
 	}
 

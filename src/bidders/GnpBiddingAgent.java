@@ -35,6 +35,11 @@ public class GnpBiddingAgent extends BiddingAgent {
 	}
 	
 	@Override
+	protected void mutate() {
+		decisionTree.mutate();
+	}
+	
+	@Override
 	protected void setup() {
 		setup("GnpBidder");
 	}

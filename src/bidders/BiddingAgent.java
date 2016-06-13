@@ -23,8 +23,8 @@ public abstract class BiddingAgent extends Agent {
 	protected Auction currentAuction;
 	protected Good currentGood;
 	protected GoodValuation currentGoodValuation;
-	
-	private int desperateGoodsWon, bargainGoodsWon, remainingTimeGoodsWon;
+
+	private double fitnessValue;
 
 	private class AuctionHouseRegisterBehavior extends OneShotBehaviour {
 		private static final long serialVersionUID = 3360748631414660645L;
@@ -94,7 +94,7 @@ public abstract class BiddingAgent extends Agent {
 					changeCurrentGood(new Good(commonPrice));
 				}
 				currentAuction = new Auction(Integer.parseInt(msgParts[2]), Integer.parseInt(msgParts[3]), newGoodNumber, highestBid);
-				
+
 				restartBidding();
 				bid(reply);
 			}
@@ -103,22 +103,30 @@ public abstract class BiddingAgent extends Agent {
 				currentAuction.setHighestBid(Double.parseDouble(msgParts[2]));
 			}
 			else if (msgParts[1].equals("YouWin!")) {
+				double finalPrice = Double.parseDouble(msgParts[2]);
+				double adding = currentGoodValuation.getPrivatePrice() - finalPrice;
+
 				switch (currentGoodValuation.getAttitude()) {
 				case DESPERATE:
-					++desperateGoodsWon;
+					adding += currentGood.getCommonPrice() * .3;
 					break;
 				case BARGAIN:
-					++bargainGoodsWon;
+					adding += currentGood.getCommonPrice() * .1;
 					break;
 				case REMAINING_TIME:
-					++remainingTimeGoodsWon;
+					adding += currentGood.getCommonPrice() * .2;
 					break;
 				}
+
+				fitnessValue += adding;
 			}
 			else if (msgParts[1].equals("FitnessValue")) {
 				reply.setPerformative(ACLMessage.INFORM);
 				reply.setContent("Bidder_FitnessValue_" + getFitnessValue());
 				send(reply);
+			}
+			else if (msgParts[1].equals("Mutate")) {
+				mutate();
 			}
 		}
 
@@ -178,14 +186,13 @@ public abstract class BiddingAgent extends Agent {
 	protected abstract double bargainBid(Good good, Auction auction);
 	protected abstract double remainingTimeBid(Good good, Auction auction);
 	protected abstract void restartBidding();
+	protected abstract void mutate();
 
 	@Override
 	protected abstract void setup();
 
 	protected void setup(String bidderType) {
-		desperateGoodsWon = 0;
-		bargainGoodsWon = 0;
-		remainingTimeGoodsWon = 0;
+		fitnessValue = 0;
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
 		ServiceDescription sd = new ServiceDescription();
@@ -204,8 +211,8 @@ public abstract class BiddingAgent extends Agent {
 		AuctionHouseRegisterBehavior b = new AuctionHouseRegisterBehavior(this);
 		addBehaviour(b);
 	}
-	
+
 	private double getFitnessValue() {
-		return desperateGoodsWon + bargainGoodsWon + remainingTimeGoodsWon; // TODO: change
+		return fitnessValue;
 	}
 }

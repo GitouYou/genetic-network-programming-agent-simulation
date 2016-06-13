@@ -26,6 +26,11 @@ public class ProcessingNode extends Node {
 	}
 	
 	@Override
+	public void addDestination(Node destination) {
+		setNextNode(destination);
+	}
+	
+	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " (" + hashCode() + ")\n   -> " + nextNode.getClass().getSimpleName() + " (" + nextNode.hashCode() + ")";
 	}

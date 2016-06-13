@@ -17,6 +17,7 @@ public abstract class JudgmentNode extends Node {
 		return destination2;
 	}
 	
+	@Override
 	public void addDestination(Node destination) {
 		if (destination1 == null) destination1 = destination;
 		else if (destination2 == null) destination2 = destination;

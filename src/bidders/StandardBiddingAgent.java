@@ -46,6 +46,9 @@ public class StandardBiddingAgent extends BiddingAgent {
 	
 	@Override
 	protected void restartBidding() {}
+	
+	@Override
+	protected void mutate() {}
 
 	@Override
 	protected void setup() {
