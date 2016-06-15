@@ -41,7 +41,7 @@ public class StandardBiddingAgent extends BiddingAgent {
 	}
 
 	private double alpha(double k, double beta, int t, int T) {
-		return k + (1 - k) * Math.pow((double) t / T, 1 / beta);
+		return k + (1 - k) * Math.pow((double) t / T, 1 / beta) - .9;
 	}
 	
 	@Override

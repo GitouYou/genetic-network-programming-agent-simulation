@@ -27,7 +27,7 @@ public class Main {
 			auctionHouse.start();
 
 			ArrayList<AgentController> agents = new ArrayList<AgentController>();
-			for (int i = 1; i <= 20; ++i) {
+			for (int i = 1; i <= 25; ++i) {
 				agents.add(cc.acceptNewAgent("bidder-gnp-" + i, new GnpBiddingAgent()));
 				agents.add(cc.acceptNewAgent("bidder-std-" + i, new StandardBiddingAgent()));
 			}

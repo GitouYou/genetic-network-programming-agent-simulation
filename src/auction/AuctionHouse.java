@@ -2,7 +2,6 @@ package auction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
 import org.jfree.ui.RefineryUtilities;
@@ -20,8 +19,8 @@ import jade.lang.acl.ACLMessage;
 
 public class AuctionHouse extends Agent {
 	private static final long serialVersionUID = 4594153245533339995L;
-	private static final int NUM_AGENTS = 40;
-	private static final int NUM_AUCTIONS = 10;
+	private static final int NUM_AGENTS = 50;
+	private static final int NUM_AUCTIONS = 20;
 
 	private ArrayList<Auction> auctions;
 	private int currentAuction;
@@ -242,7 +241,8 @@ public class AuctionHouse extends Agent {
 				ArrayList<AID> aids = it.next();
 				for (AID aid : aids) {
 					mutators.add(aid);
-					if (++numMutators == 10) break;
+					++numMutators;
+					if (NUM_AGENTS - numMutators == 10) break;
 				}
 			}
 			
